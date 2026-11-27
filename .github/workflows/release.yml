@@ -1,0 +1,39 @@
+name: Release
+
+# Pushing a tag `v<version>` publishes that version to npm, with provenance.
+# It authenticates through npm's trusted publishing (OIDC): no token is stored,
+# the package's settings on npmjs.com name this workflow file.
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".node-version"
+          registry-url: "https://registry.npmjs.org"
+      # Trusted publishing needs npm 11.5.1 or later.
+      - run: npm install -g npm@11.21.3 --ignore-scripts
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: The tag names the package's version
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [ "${GITHUB_REF_NAME}" != "v${version}" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match @callshift/web ${version}."
+            exit 1
+          fi
+
+      - run: pnpm test
+      - name: Pack and check the tarball
+        id: pack
+        run: echo "tarball=$(pnpm --silent pack:checked | tail -n 1)" >> "$GITHUB_OUTPUT"
+      - run: npm publish "${{ steps.pack.outputs.tarball }}" --access public

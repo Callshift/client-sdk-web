@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@callshift/web example</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 36rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+      button {
+        margin-right: 0.5rem;
+      }
+      #transcript p {
+        margin: 0.25rem 0;
+      }
+      .agent {
+        color: #1d4ed8;
+      }
+      .caller {
+        color: #15803d;
+      }
+      .interim {
+        opacity: 0.6;
+      }
+      #error {
+        color: #b91c1c;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Web call</h1>
+    <p>
+      <label>Your first name <input id="first-name" value="Ada" /></label>
+    </p>
+    <p>
+      <button id="start">Start</button>
+      <button id="mute" disabled>Mute</button>
+      <button id="end" disabled>End</button>
+    </p>
+    <p>Status: <strong id="status">idle</strong> <span id="speaking"></span></p>
+    <p id="error"></p>
+    <div id="transcript"></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
