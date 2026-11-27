@@ -1,0 +1,6 @@
+# Settings only (single package, no workspace packages).
+
+# Do not install a version published less than 7 days ago (in minutes): the
+# window in which a compromised or broken release is typically caught and
+# yanked. Same wait as the Dependabot cooldown and the other Callshift repos.
+minimumReleaseAge: 10080

@@ -1,0 +1,31 @@
+version: 2
+
+# Same policy as the other Callshift repositories: a freshly published version
+# is not proposed until it has been out a week (cooldown), the window in which
+# a compromised or broken release is typically caught and yanked. The same wait
+# applies to installs (minimumReleaseAge in pnpm-workspace.yaml). Security
+# updates are not delayed by the cooldown.
+updates:
+  # npm dependencies, from package.json and pnpm-lock.yaml at the root.
+  # The week's minor and patch bumps come as one PR; majors stay separate.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    groups:
+      npm-minor-patch:
+        update-types: ["minor", "patch"]
+
+  # Workflow actions are pinned to commit SHAs: Dependabot bumps the SHAs and
+  # their trailing "# vX.Y.Z" comments in lockstep.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns: ["*"]
